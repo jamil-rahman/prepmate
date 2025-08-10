@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import type { ReactElement, ReactNode } from "react";
+import { Suspense } from "react";
 import { AuthProvider } from "@/lib/auth-context";
 import { Inter, Montserrat } from "next/font/google";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat", display: "swap" });
 import Navbar from "@/components/Navbar";
 import "./globals.css";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
 export const metadata: Metadata = {
   title: "PrepMate",
@@ -26,11 +28,15 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{ children: ReactNode }>): ReactElement {
+  const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
       <body className="antialiased min-h-screen bg-crisc-bg-dark text-crisc-text-light">
         <AuthProvider>
           <Navbar />
+          <Suspense fallback={null}>
+            <GoogleAnalytics measurementId={gaMeasurementId} />
+          </Suspense>
           <main className="flex-1">
             {children}
           </main>

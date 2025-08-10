@@ -85,3 +85,12 @@ export type QuizAction =
   | { type: "SELECT"; answer: string; correctAnswer: string }
   | { type: "NEXT"; total: number }
   | { type: "RESTART" };
+
+declare global {
+  interface Window {
+    dataLayer: unknown[];
+    gtag: (command: string, targetId: string, config?: Record<string, unknown>) => void;
+  }
+}
+
+export {};
