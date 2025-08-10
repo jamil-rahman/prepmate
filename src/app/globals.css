@@ -1,26 +1,102 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-heading: var(--font-inter);
+  --font-body: var(--font-montserrat);
+
+  /* Colors (v4 requires --color-* tokens) */
+  --color-crisc-primary: #E78232;
+  --color-crisc-primary-hover: #d97427;
+  --color-crisc-bg-dark: #191C2B;
+  --color-crisc-card-dark: rgb(38,53,71);
+  --color-crisc-navbar: #2D4159;
+  --color-crisc-border: #4b5563;
+  --color-crisc-text-light: #ffffff;
+  --color-crisc-text-muted: #d1d5db;
+  --color-crisc-text-dark: #0f172a;
+  --color-option-letter: #CCDDE7;
+  --color-option-button: #CCDDE7;
+
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-success-dark: #065f46;
+  --color-error-dark: #7f1d1d;
+
+  /* Accent palette for stats */
+  --color-accent-blue: #60a5fa;   /* Tailwind blue-400 */
+  --color-accent-green: #34d399;  /* emerald-400 */
+  --color-accent-pink: #f472b6;   /* pink-400 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Accent utilities */
+.text-accent-blue { color: var(--color-accent-blue); }
+.text-accent-green { color: var(--color-accent-green); }
+.text-accent-pink { color: var(--color-accent-pink); }
+.bg-accent-blue { background-color: var(--color-accent-blue); }
+.bg-accent-green { background-color: var(--color-accent-green); }
+.bg-accent-pink { background-color: var(--color-accent-pink); }
+
+/* Fluid text for button labels: ~14px -> 18px across widths */
+.text-fluid-button { font-size: clamp(0.875rem, 2.6vw, 1.125rem); }
+
+/* Heading gradient accent */
+.heading-gradient {
+  background: linear-gradient(90deg, var(--color-crisc-text-light), var(--color-crisc-primary));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+.animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; }
+.animate-slideIn { animation: slideIn 0.3s ease-out forwards; }
+.animate-pulse-slow { animation: pulse 2s infinite; }
+
+a:focus-visible, button:focus-visible, [href]:focus-visible { outline: 2px solid var(--color-crisc-primary); outline-offset: 2px; }
+
+body { @apply font-body; }
+
+h1, h2, h3, h4, h5, h6 { @apply font-heading; }
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { @apply bg-crisc-card-dark; }
+::-webkit-scrollbar-thumb { @apply bg-crisc-primary rounded-full; }
+::-webkit-scrollbar-thumb:hover { @apply bg-crisc-primary-hover; }
+
+/* Premium Quiz UI Styles */
+.quiz-option {
+  @apply relative flex items-center w-full p-4 rounded-lg transition-all duration-300 
+         cursor-pointer border-2 hover:border-crisc-primary;
+  background-color: var(--color-option-button);
+  color: var(--color-crisc-text-dark);
+  border-color: rgb(from var(--color-crisc-border) r g b / 0.6);
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.quiz-option-selected { @apply border-crisc-primary; background-color: rgb(from var(--color-crisc-primary) r g b / 0.20); color: var(--color-crisc-text-light); }
+.quiz-option-correct { @apply !bg-success-dark !border-success; color: var(--color-crisc-text-light); }
+.quiz-option-incorrect { @apply !bg-error-dark !border-error; color: var(--color-crisc-text-light); }
+
+.quiz-option-letter {
+  @apply w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300;
+  color: var(--color-option-letter);
+  border-color: var(--color-crisc-bg-dark);
+  background-color: var(--color-crisc-bg-dark);
 }
+
+.quiz-card { @apply rounded-2xl shadow-2xl p-8 bg-crisc-card-dark backdrop-blur-sm transition-all duration-300; }
+
+.quiz-explanation { @apply p-6 rounded-xl bg-gradient-to-br from-crisc-card-dark to-crisc-bg-dark border-2 border-crisc-border; }
+
+/* Glass effect for premium feel */
+.glass-effect { backdrop-filter: blur(6px); background-color: rgb(from var(--color-crisc-card-dark) r g b / 0.85); }
+
+/* Premium hover effects */
+.hover-lift { @apply transition-transform duration-300 hover:-translate-y-1; }
+
+/* Premium shadows */
+.premium-shadow { @apply shadow-[0_8px_30px_rgb(0,0,0,0.12)]; }
