@@ -5,7 +5,7 @@
   --font-body: var(--font-montserrat);
 
   /* Colors (v4 requires --color-* tokens) */
-  --color-crisc-primary: #E78232;
+  --color-crisc-primary: #ff6d4d;
   --color-crisc-primary-hover: #d97427;
   --color-crisc-bg-dark: #191C2B;
   --color-crisc-card-dark: rgb(38,53,71);

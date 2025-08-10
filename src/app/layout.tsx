@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   authors: [{ name: "Mohd Jamilur Rahman Shaan", url: "" }, { name: "Sameer Lal", url: "" }],
   creator: "Mohd Jamilur Rahman Shaan and Sameer Lal",
   publisher: "Mohd Jamilur Rahman Shaan and Sameer Lal",
+  icons: {
+    icon: "/favicon.png",
+  },
   // metadataBase: new URL("https://crisc-quiz.vercel.app"),
   openGraph: {
     title: "PrepMate",
