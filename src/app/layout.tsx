@@ -31,7 +31,7 @@ export default function RootLayout({
   const gaMeasurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? "";
   return (
     <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
-      <body className="antialiased min-h-screen bg-crisc-bg-dark text-crisc-text-light">
+      <body className="antialiased min-h-screen">
         <AuthProvider>
           <Navbar />
           <Suspense fallback={null}>

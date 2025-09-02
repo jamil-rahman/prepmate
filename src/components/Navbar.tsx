@@ -57,7 +57,7 @@ export default function Navbar(): ReactElement {
   return (
     <nav
       className={
-        `sticky top-0 z-50 bg-crisc-navbar border-b rounded-bl-3xl rounded-br-3xl md:rounded-none border-crisc-primary ` +
+        `sticky top-0 z-50 bg-primary border-b rounded-bl-3xl rounded-br-3xl md:rounded-none border-default ` +
         `transition-all duration-300 ease-out ` +
         (isHidden ? "-translate-y-full opacity-0 pointer-events-none" : "translate-y-0 opacity-100")
       }
@@ -69,54 +69,63 @@ export default function Navbar(): ReactElement {
             <Link
               href="/"
               onClick={handleClose}
-              className="text-xl font-bold text-crisc-text-light hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crisc-primary rounded-sm"
+              className="text-xl font-bold text-primary hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent rounded-sm transition-colors duration-200"
             >
               PrepMate
             </Link>
-            <span className="ml-2 px-2 py-1 text-xs font-medium rounded-full bg-crisc-primary text-crisc-text-light">
+            <span className="ml-2 px-2 py-1 text-xs font-medium rounded-full bg-accent text-white">
               Demo
             </span>
           </div>
 
           {/* Navigation Links (Desktop) */}
-          <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+          <div className="hidden md:flex items-center justify-end flex-1 gap-8">
+            <div className="flex items-center gap-6">
               <Link
                 href="/"
-                className="text-crisc-text-light hover:opacity-80 px-3 py-2 rounded-md text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crisc-primary"
+                className="text-primary hover:text-accent px-3 py-2 rounded-md text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors duration-200"
               >
                 Home
               </Link>
               <Link
                 href="/domains"
-                className="text-crisc-text-light hover:opacity-80 px-3 py-2 rounded-md text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crisc-primary"
+                className="text-primary hover:text-accent px-3 py-2 rounded-md text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors duration-200"
               >
                 Try Demo
               </Link>
-
-              {!loading && (
-                user ? (
-                  <div className="flex items-center space-x-4">
-                    <span className="text-sm text-crisc-text-light">
-                      {user.displayName || user.email}
-                    </span>
-                    <button
-                      onClick={handleSignOut}
-                      className="text-crisc-text-light hover:opacity-80 px-4 py-2 rounded-md text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crisc-primary bg-crisc-primary"
-                    >
-                      Sign Out
-                    </button>
-                  </div>
-                ) : (
-                  <Link
-                    href="/auth"
-                    className="text-crisc-text-light hover:opacity-80 px-4 py-2 rounded-md text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crisc-primary bg-crisc-primary"
-                  >
-                    Sign In
-                  </Link>
-                )
-              )}
             </div>
+
+            {!loading && (
+              user ? (
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    {user.photoURL && (
+                      <img
+                        src={user.photoURL}
+                        alt={`${user.displayName || user.email}'s profile`}
+                        className="w-8 h-8 rounded-full border border-default flex-shrink-0"
+                      />
+                    )}
+                    <span className="text-sm text-primary font-medium whitespace-nowrap">
+                      {user.displayName?.split(" ")[0] || user.email?.split("@")[0]}
+                    </span>
+                  </div>
+                  <button
+                    onClick={handleSignOut}
+                    className="text-white hover:opacity-90 px-4 py-2 rounded-md text-sm font-medium bg-accent transition-colors duration-200 whitespace-nowrap"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <Link
+                  href="/auth"
+                  className="text-white hover:opacity-90 px-4 py-2 rounded-md text-sm font-medium bg-accent transition-colors duration-200"
+                >
+                  Sign In
+                </Link>
+              )
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -124,7 +133,7 @@ export default function Navbar(): ReactElement {
             <button
               type="button"
               onClick={handleToggle}
-              className="inline-flex items-center justify-center p-3 rounded-md text-crisc-text-light hover:opacity-80 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-crisc-primary"
+              className="inline-flex items-center justify-center p-3 rounded-md text-primary hover:text-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors duration-200"
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
               aria-label={isOpen ? "Close main menu" : "Open main menu"}
@@ -145,34 +154,53 @@ export default function Navbar(): ReactElement {
 
       {/* Mobile menu */}
       <div id="mobile-menu" className={`md:hidden ${isOpen ? "block" : "hidden"}`}>
-        <div className="px-4 pt-2 pb-4 space-y-1 border-t border-crisc-primary bg-crisc-navbar">
+        <div className="px-4 pt-2 pb-4 space-y-1 border-t border-default bg-primary">
           <Link
             href="/"
             onClick={handleClose}
-            className="block text-crisc-text-light hover:opacity-80 px-3 py-3 rounded-md text-base font-medium"
+            className="block text-primary hover:text-accent px-3 py-3 rounded-md text-base font-medium transition-colors duration-200"
           >
             Home
           </Link>
           <Link
             href="/domains"
             onClick={handleClose}
-            className="block text-crisc-text-light hover:opacity-80 px-3 py-3 rounded-md text-base font-medium"
+            className="block text-primary hover:text-accent px-3 py-3 rounded-md text-base font-medium transition-colors duration-200"
           >
             Try Demo
           </Link>
           {!loading && (
             user ? (
-              <button
-                onClick={handleSignOut}
-                className="w-full text-left text-crisc-text-light hover:opacity-80 px-3 py-3 rounded-md text-base font-medium bg-crisc-primary"
-              >
-                Sign Out
-              </button>
+              <div className="space-y-2">
+                <div className="flex items-center space-x-3 px-3 py-2">
+                  {user.photoURL && (
+                    <img
+                      src={user.photoURL}
+                      alt={`${user.displayName || user.email}'s profile`}
+                      className="w-10 h-10 rounded-full border-2 border-default"
+                    />
+                  )}
+                  <div className="flex-1">
+                    <p className="text-sm text-primary font-medium">
+                      {user.displayName || user.email}
+                    </p>
+                    <p className="text-xs text-secondary">
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={handleSignOut}
+                  className="w-full text-left text-white hover:opacity-80 px-3 py-3 rounded-md text-base font-medium bg-accent transition-colors duration-200"
+                >
+                  Sign Out
+                </button>
+              </div>
             ) : (
               <Link
                 href="/auth"
                 onClick={handleClose}
-                className="block text-crisc-text-light hover:opacity-80 px-3 py-3 rounded-md text-base font-medium bg-crisc-primary"
+                className="block text-white hover:opacity-80 px-3 py-3 rounded-md text-base font-medium bg-accent transition-colors duration-200"
               >
                 Sign In for Progress
               </Link>

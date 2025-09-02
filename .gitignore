@@ -32,6 +32,9 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env
+.env.local
+.env.development
+.env.production
 
 # vercel
 .vercel
@@ -48,3 +51,5 @@ sample-data.csv
 
 prisma/migrations/migration_lock.toml
 prisma/seed.ts
+
+firebase-api.txt

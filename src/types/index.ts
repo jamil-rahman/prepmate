@@ -93,4 +93,6 @@ declare global {
   }
 }
 
-export {};
+
+export type ButtonVariant = "primary" | "outline";
+

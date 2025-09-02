@@ -4,49 +4,68 @@
   --font-heading: var(--font-inter);
   --font-body: var(--font-montserrat);
 
-  /* Colors (v4 requires --color-* tokens) */
-  --color-crisc-primary: #ff6d4d;
-  --color-crisc-primary-hover: #d97427;
-  --color-crisc-bg-dark: #191C2B;
-  --color-crisc-card-dark: rgb(38,53,71);
-  --color-crisc-navbar: #2D4159;
-  --color-crisc-border: #4b5563;
-  --color-crisc-text-light: #ffffff;
-  --color-crisc-text-muted: #d1d5db;
-  --color-crisc-text-dark: #0f172a;
-  --color-option-letter: #CCDDE7;
-  --color-option-button: #CCDDE7;
+  /* 60-30-10 Color Scheme - Design Academy Inspired */
+  /* Primary (60%) - Main background and dominant color */
+  --color-primary: #fdf6e3;        /* Warm cream background */
+  --color-primary-dark: #f7f0dd;   /* Slightly darker cream for cards */
+  
+  /* Secondary (30%) - Supporting elements */
+  --color-secondary: #2c1810;      /* Dark brown for text and nav */
+  --color-secondary-light: #5d4037; /* Medium brown for muted text */
+  --color-secondary-lighter: #d7ccc8; /* Light brown for borders */
+  
+  /* Accent (10%) - Call-to-action and highlights */
+  --color-accent: #8b1538;         /* Deep burgundy for primary actions */
+  --color-accent-hover: #6d1028;   /* Darker burgundy for hover states */
+  --color-accent-light: #f8d7da;   /* Light pink for backgrounds */
+  
+  /* Additional accent colors from the palette */
+  --color-coral: #e74c3c;         /* Coral pink for secondary actions */
+  --color-coral-light: #fadbd8;   /* Light coral */
+  --color-pink: #f8bbd9;          /* Soft pink */
+  --color-mint: #a8e6cf;          /* Mint green for success states */
+  --color-mint-light: #e8f5e8;    /* Light mint */
 
-  --color-success: #10b981;
+  /* Semantic colors using palette */
+  --color-success: var(--color-mint);
+  --color-success-light: var(--color-mint-light);
   --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-success-dark: #065f46;
-  --color-error-dark: #7f1d1d;
+  --color-warning-light: #fef3c7;
+  --color-error: var(--color-coral);
+  --color-error-light: var(--color-coral-light);
 
-  /* Accent palette for stats */
-  --color-accent-blue: #60a5fa;   /* Tailwind blue-400 */
-  --color-accent-green: #34d399;  /* emerald-400 */
-  --color-accent-pink: #f472b6;   /* pink-400 */
+  /* Text colors */
+  --color-text-primary: var(--color-secondary);     /* Dark brown for main text */
+  --color-text-secondary: var(--color-secondary-light); /* Medium brown for secondary text */
+  --color-text-muted: #8d6e63;                      /* Muted brown for less important text */
+  --color-text-white: #ffffff;                      /* Pure white for dark backgrounds */
+
+  /* Component specific */
+  --color-border: var(--color-secondary-lighter);   /* Light brown border */
+  --color-border-focus: var(--color-accent);        /* Burgundy for focus states */
 }
 
-/* Accent utilities */
-.text-accent-blue { color: var(--color-accent-blue); }
-.text-accent-green { color: var(--color-accent-green); }
-.text-accent-pink { color: var(--color-accent-pink); }
-.bg-accent-blue { background-color: var(--color-accent-blue); }
-.bg-accent-green { background-color: var(--color-accent-green); }
-.bg-accent-pink { background-color: var(--color-accent-pink); }
+/* Utility classes for Design Academy color scheme */
+.text-primary { color: var(--color-text-primary); }
+.text-secondary { color: var(--color-text-secondary); }
+.text-muted { color: var(--color-text-muted); }
+.text-accent { color: var(--color-accent); }
+.text-coral { color: var(--color-coral); }
+.bg-primary { background-color: var(--color-primary); }
+.bg-primary-dark { background-color: var(--color-primary-dark); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-accent { background-color: var(--color-accent); }
+.bg-accent-light { background-color: var(--color-accent-light); }
+.bg-coral { background-color: var(--color-coral); }
+.bg-coral-light { background-color: var(--color-coral-light); }
+.bg-pink { background-color: var(--color-pink); }
+.bg-mint { background-color: var(--color-mint); }
+.bg-mint-light { background-color: var(--color-mint-light); }
+.border-default { border-color: var(--color-border); }
+.border-accent { border-color: var(--color-accent); }
 
 /* Fluid text for button labels: ~14px -> 18px across widths */
 .text-fluid-button { font-size: clamp(0.875rem, 2.6vw, 1.125rem); }
-
-/* Heading gradient accent */
-.heading-gradient {
-  background: linear-gradient(90deg, var(--color-crisc-text-light), var(--color-crisc-primary));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes slideIn { from { transform: translateX(-10px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
@@ -56,47 +75,81 @@
 .animate-slideIn { animation: slideIn 0.3s ease-out forwards; }
 .animate-pulse-slow { animation: pulse 2s infinite; }
 
-a:focus-visible, button:focus-visible, [href]:focus-visible { outline: 2px solid var(--color-crisc-primary); outline-offset: 2px; }
-
-body { @apply font-body; }
-
-h1, h2, h3, h4, h5, h6 { @apply font-heading; }
-
-/* Custom scrollbar for dark theme */
-::-webkit-scrollbar { width: 8px; }
-::-webkit-scrollbar-track { @apply bg-crisc-card-dark; }
-::-webkit-scrollbar-thumb { @apply bg-crisc-primary rounded-full; }
-::-webkit-scrollbar-thumb:hover { @apply bg-crisc-primary-hover; }
-
-/* Premium Quiz UI Styles */
-.quiz-option {
-  @apply relative flex items-center w-full p-4 rounded-lg transition-all duration-300 
-         cursor-pointer border-2 hover:border-crisc-primary;
-  background-color: var(--color-option-button);
-  color: var(--color-crisc-text-dark);
-  border-color: rgb(from var(--color-crisc-border) r g b / 0.6);
+a:focus-visible, button:focus-visible, [href]:focus-visible { 
+  outline: 2px solid var(--color-border-focus); 
+  outline-offset: 2px; 
 }
 
-.quiz-option-selected { @apply border-crisc-primary; background-color: rgb(from var(--color-crisc-primary) r g b / 0.20); color: var(--color-crisc-text-light); }
-.quiz-option-correct { @apply !bg-success-dark !border-success; color: var(--color-crisc-text-light); }
-.quiz-option-incorrect { @apply !bg-error-dark !border-error; color: var(--color-crisc-text-light); }
+body { 
+  @apply font-body; 
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+}
+
+h1, h2, h3, h4, h5, h6 { 
+  @apply font-heading; 
+  color: var(--color-text-primary);
+}
+
+/* Custom scrollbar for light theme */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background-color: var(--color-primary-dark); }
+::-webkit-scrollbar-thumb { 
+  background-color: var(--color-accent); 
+  border-radius: 4px; 
+}
+::-webkit-scrollbar-thumb:hover { background-color: var(--color-accent-hover); }
+
+/* Quiz UI Styles with new color scheme */
+.quiz-option {
+  @apply relative flex items-center w-full p-4 rounded-lg transition-all duration-300 
+         cursor-pointer border-2;
+  background-color: var(--color-primary);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
+}
+
+.quiz-option:hover {
+  border-color: var(--color-coral);
+  background-color: var(--color-coral-light);
+}
+
+.quiz-option-selected { 
+  border-color: var(--color-accent); 
+  background-color: var(--color-pink); 
+}
+
+.quiz-option-correct { 
+  background-color: var(--color-mint-light) !important; 
+  border-color: var(--color-mint) !important; 
+}
+
+.quiz-option-incorrect { 
+  background-color: var(--color-coral-light) !important; 
+  border-color: var(--color-coral) !important; 
+}
 
 .quiz-option-letter {
   @apply w-8 h-8 rounded-full flex items-center justify-center border-2 transition-colors duration-300;
-  color: var(--color-option-letter);
-  border-color: var(--color-crisc-bg-dark);
-  background-color: var(--color-crisc-bg-dark);
+  color: var(--color-text-white);
+  border-color: var(--color-accent);
+  background-color: var(--color-accent);
 }
 
-.quiz-card { @apply rounded-2xl shadow-2xl p-8 bg-crisc-card-dark backdrop-blur-sm transition-all duration-300; }
+.quiz-card { 
+  @apply rounded-2xl shadow-lg p-8 transition-all duration-300; 
+  background-color: var(--color-primary-dark);
+  border: 1px solid var(--color-border);
+}
 
-.quiz-explanation { @apply p-6 rounded-xl bg-gradient-to-br from-crisc-card-dark to-crisc-bg-dark border-2 border-crisc-border; }
+.quiz-explanation { 
+  @apply p-6 rounded-xl border-2; 
+  background-color: var(--color-mint-light);
+  border-color: var(--color-mint);
+}
 
-/* Glass effect for premium feel */
-.glass-effect { backdrop-filter: blur(6px); background-color: rgb(from var(--color-crisc-card-dark) r g b / 0.85); }
-
-/* Premium hover effects */
+/* Hover effects */
 .hover-lift { @apply transition-transform duration-300 hover:-translate-y-1; }
 
-/* Premium shadows */
-.premium-shadow { @apply shadow-[0_8px_30px_rgb(0,0,0,0.12)]; }
+/* Shadows */
+.card-shadow { @apply shadow-sm hover:shadow-md transition-shadow duration-300; }

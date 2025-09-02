@@ -49,16 +49,16 @@ function StatCard({ stat }: StatCardProps): ReactElement {
   // Determine accent color by label index-like hash
   const accent = useMemo(() => {
     const key = stat.label.toLowerCase();
-    if (key.includes("practice") || key.includes("question")) return "var(--color-accent-blue)";
-    if (key.includes("professionals") || key.includes("trust")) return "var(--color-accent-green)";
-    return "var(--color-accent-pink)";
+    if (key.includes("practice") || key.includes("question")) return "var(--color-accent)";
+    if (key.includes("professionals") || key.includes("trust")) return "var(--color-mint)";
+    return "var(--color-coral)";
   }, [stat.label]);
 
   return (
-    <div ref={ref} className="rounded-xl border bg-crisc-card-dark p-6 premium-shadow hover-lift" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
+    <div ref={ref} className="rounded-xl border bg-primary-dark p-6 card-shadow hover-lift border-default">
       <div className="mb-1 text-3xl sm:text-4xl font-extrabold" style={{ color: accent }}>{display}</div>
-      <div className="text-lg font-semibold text-crisc-text-light mb-1">{stat.label}</div>
-      {stat.description && <p className="text-crisc-text-muted text-sm">{stat.description}</p>}
+      <div className="text-lg font-semibold text-primary mb-1">{stat.label}</div>
+      {stat.description && <p className="text-secondary text-sm">{stat.description}</p>}
     </div>
   );
 }
