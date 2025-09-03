@@ -9,17 +9,21 @@ if (!getApps().length) {
   try {
     // In production, use service account key
     if (process.env.FIREBASE_SERVICE_ACCOUNT_KEY) {
+      console.log("Firebase service account key found, initializing...");
       const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
       app = initializeApp({
         credential: cert(serviceAccount),
         projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
       });
+      console.log("Firebase Admin initialized successfully");
     } else {
       // For development, using application default credentials
       console.warn("Firebase Admin not initialized - missing service account key");
+      console.log("Available env vars:", Object.keys(process.env).filter(key => key.includes('FIREBASE')));
     }
   } catch (error) {
     console.error("Error initializing Firebase Admin:", error);
+    console.error("Service account key length:", process.env.FIREBASE_SERVICE_ACCOUNT_KEY?.length);
   }
 } else {
   app = getApps()[0];

@@ -1,5 +1,3 @@
-// Prisma schema for CRISC Quiz App (Demo)
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,14 +8,17 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String        @id
+  email     String        @unique
   name      String?
-  createdAt DateTime @default(now())
+  createdAt DateTime      @default(now())
+  attempts  QuizAttempt[]
+
+  @@map("users")
 }
 
 model Question {
-  id            Int    @id @default(autoincrement())
+  id            Int          @id @default(autoincrement())
   domainType    String
   question      String
   optionA       String
@@ -26,4 +27,38 @@ model Question {
   optionD       String
   correctAnswer String
   explanation   String
+  userAnswers   UserAnswer[]
+
+  @@map("questions")
+}
+
+model QuizAttempt {
+  id             Int          @id @default(autoincrement())
+  userId         String
+  domainType     String
+  score          Float
+  totalQuestions Int
+  correctAnswers Int
+  completedAt    DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers        UserAnswer[]
+
+  @@index([userId])
+  @@index([completedAt])
+  @@map("quiz_attempts")
+}
+
+model UserAnswer {
+  id             Int         @id @default(autoincrement())
+  attemptId      Int
+  questionId     Int
+  selectedAnswer String
+  isCorrect      Boolean
+  timeSpent      Int?
+  attempt        QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question       Question    @relation(fields: [questionId], references: [id])
+
+  @@index([attemptId])
+  @@index([questionId])
+  @@map("user_answers")
 }

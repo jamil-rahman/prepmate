@@ -20,8 +20,13 @@ export default function QuizPage(): ReactElement {
   const [state, dispatch] = useReducer(quizReducer, initialQuizState);
 
   const handleAnswerSelect = (answer: string): void => {
-    const correct = questions[state.currentIndex].correctAnswer;
-    dispatch({ type: "SELECT", answer, correctAnswer: correct });
+    const currentQuestion = questions[state.currentIndex];
+    dispatch({ 
+      type: "SELECT", 
+      answer, 
+      correctAnswer: currentQuestion.correctAnswer,
+      questionId: currentQuestion.id 
+    });
   };
 
   const handleNextQuestion = (): void => {
@@ -77,6 +82,8 @@ export default function QuizPage(): ReactElement {
         score={state.score}
         total={questions.length}
         domainLabel={domain === "all" ? "Mixed Quiz" : (domain ?? "Quiz")}
+        domainType={domain || "all"}
+        answers={state.answers}
         onRestart={handleRestartQuiz}
         onBack={handleBackToDomains}
       />

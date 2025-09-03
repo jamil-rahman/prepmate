@@ -1,15 +1,86 @@
 "use client";
 
 import type { ReactElement } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/Button";
-import type { QuizCompleteProps } from "@/types";
+import type { QuizCompleteProps, QuizSubmitRequest, QuizSubmitResponse } from "@/types";
+import { useAuth } from "@/lib/auth-context";
 import dynamic from "next/dynamic";
 
 // Load confetti only on client when needed
 const Confetti = dynamic(() => import("react-confetti"), { ssr: false, loading: () => null });
 
-export function QuizComplete({ percentage, score, total, domainLabel, onRestart, onBack }: QuizCompleteProps): ReactElement {
+export function QuizComplete({ 
+  percentage, 
+  score, 
+  total, 
+  domainLabel, 
+  domainType, 
+  answers, 
+  onRestart, 
+  onBack, 
+  onSave 
+}: QuizCompleteProps): ReactElement {
+  const { user } = useAuth();
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
   const passed = percentage >= 70;
+
+  // Auto-save quiz results when component mounts (only for authenticated users)
+  useEffect(() => {
+    if (user && !saved && !saving) {
+      saveQuizResults();
+    }
+  }, [user]); // Only depend on user, not saved/saving to prevent infinite loop
+
+  const saveQuizResults = async (): Promise<void> => {
+    if (!user || saving || saved) return;
+
+    setSaving(true);
+    try {
+      const idToken = await user.getIdToken();
+      
+      const requestData: QuizSubmitRequest = {
+        domainType,
+        score: percentage,
+        totalQuestions: total,
+        correctAnswers: score,
+        answers: answers.map(answer => ({
+          questionId: answer.questionId,
+          selectedAnswer: answer.selectedAnswer,
+          isCorrect: answer.isCorrect,
+        })),
+      };
+      
+      const response = await fetch("/api/quiz/submit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${idToken}`,
+        },
+        body: JSON.stringify(requestData),
+      });
+
+      if (response.ok) {
+        const result: QuizSubmitResponse = await response.json();
+        if (result.success) {
+          setSaved(true);
+          onSave?.(true);
+        } else {
+          console.error("Failed to save quiz results:", result.error);
+          onSave?.(false);
+        }
+      } else {
+        console.error("Failed to save quiz results - HTTP", response.status);
+        onSave?.(false);
+      }
+    } catch (error) {
+      console.error("Error saving quiz results:", error);
+      onSave?.(false);
+    } finally {
+      setSaving(false);
+    }
+  };
   return (
     <div className="min-h-screen flex items-center justify-center p-4 bg-crisc-bg-dark">
       {passed && (
@@ -33,6 +104,23 @@ export function QuizComplete({ percentage, score, total, domainLabel, onRestart,
           <p className="text-xl text-crisc-text-light mb-4">
             {score} out of {total} correct
           </p>
+          {user && (
+            <div className="mb-4">
+              {saving ? (
+                <p className="text-sm text-yellow-400 flex items-center justify-center gap-2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yellow-400" />
+                  Saving results...
+                </p>
+              ) : saved ? (
+                <p className="text-sm text-green-400 flex items-center justify-center gap-2">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  Results saved to your dashboard
+                </p>
+              ) : null}
+            </div>
+          )}
           <div className="w-full rounded-full h-3 bg-gray-800">
             <div
               className={`h-3 rounded-full transition-all duration-1000 ${percentage >= 80 ? "bg-success" : percentage >= 60 ? "bg-warning" : "bg-error"}`}

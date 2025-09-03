@@ -37,7 +37,7 @@ export default function AuthPage(): ReactElement {
   // Show loading while checking auth state
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4" />
           <p className="text-white text-xl">Loading...</p>
@@ -49,7 +49,7 @@ export default function AuthPage(): ReactElement {
   // Don't render the sign-in form if user is already authenticated
   if (user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-900 via-purple-900 to-indigo-900 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4" />
           <p className="text-white text-xl">Redirecting...</p>
