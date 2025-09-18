@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactElement } from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/Button";
 import type { QuizCompleteProps, QuizSubmitRequest, QuizSubmitResponse } from "@/types";
 import { useAuth } from "@/lib/auth-context";
@@ -24,14 +24,16 @@ export function QuizComplete({
   const { user } = useAuth();
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const hasAttemptedSave = useRef(false);
   const passed = percentage >= 70;
 
   // Auto-save quiz results when component mounts (only for authenticated users)
   useEffect(() => {
-    if (user && !saved && !saving) {
+    if (user && !saved && !saving && !hasAttemptedSave.current) {
+      hasAttemptedSave.current = true;
       saveQuizResults();
     }
-  }, [user]); // Only depend on user, not saved/saving to prevent infinite loop
+  }, [user]); // Only depend on user
 
   const saveQuizResults = async (): Promise<void> => {
     if (!user || saving || saved) return;

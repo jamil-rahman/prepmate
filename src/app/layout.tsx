@@ -5,7 +5,7 @@ import { AuthProvider } from "@/lib/auth-context";
 import { Inter, Montserrat } from "next/font/google";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
 const montserrat = Montserrat({ subsets: ["latin"], variable: "--font-montserrat", display: "swap" });
-import Navbar from "@/components/Navbar";
+import ConditionalNavbar from "@/components/ConditionalNavbar";
 import "./globals.css";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 
@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${montserrat.variable}`}>
       <body className="antialiased min-h-screen">
         <AuthProvider>
-          <Navbar />
+          <ConditionalNavbar />
           <Suspense fallback={null}>
             <GoogleAnalytics measurementId={gaMeasurementId} />
           </Suspense>

@@ -9,17 +9,36 @@ export default function Navbar(): ReactElement {
   const { user, loading, signOut } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
   const lastYRef = useRef(0);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
   const handleToggle = useCallback(() => setIsOpen((o) => !o), []);
   const handleClose = useCallback(() => setIsOpen(false), []);
+  const handleUserDropdownToggle = useCallback(() => setUserDropdownOpen((o) => !o), []);
+  const handleUserDropdownClose = useCallback(() => setUserDropdownOpen(false), []);
 
   useEffect(() => {
     const onEsc = (e: KeyboardEvent): void => {
-      if (e.key === "Escape") setIsOpen(false);
+      if (e.key === "Escape") {
+        setIsOpen(false);
+        setUserDropdownOpen(false);
+      }
     };
     window.addEventListener("keydown", onEsc);
     return () => window.removeEventListener("keydown", onEsc);
+  }, []);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent): void => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setUserDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   useEffect(() => {
@@ -49,6 +68,7 @@ export default function Navbar(): ReactElement {
     try {
       await signOut();
       setIsOpen(false);
+      setUserDropdownOpen(false);
     } catch (error) {
       console.error("Sign out error:", error);
     }
@@ -97,8 +117,13 @@ export default function Navbar(): ReactElement {
 
             {!loading && (
               user ? (
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
+                <div className="relative" ref={dropdownRef}>
+                  <button
+                    onClick={handleUserDropdownToggle}
+                    className="flex items-center gap-2 text-primary hover:text-accent px-3 py-2 rounded-md text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent transition-colors duration-200"
+                    aria-expanded={userDropdownOpen}
+                    aria-haspopup="true"
+                  >
                     {user.photoURL && (
                       <img
                         src={user.photoURL}
@@ -106,16 +131,43 @@ export default function Navbar(): ReactElement {
                         className="w-8 h-8 rounded-full border border-default flex-shrink-0"
                       />
                     )}
-                    <span className="text-sm text-primary font-medium whitespace-nowrap">
+                    <span className="whitespace-nowrap">
                       {user.displayName?.split(" ")[0] || user.email?.split("@")[0]}
                     </span>
-                  </div>
-                  <button
-                    onClick={handleSignOut}
-                    className="text-white hover:opacity-90 px-4 py-2 rounded-md text-sm font-medium bg-accent transition-colors duration-200 whitespace-nowrap"
-                  >
-                    Sign Out
+                    <svg
+                      className={`w-4 h-4 transition-transform duration-200 ${userDropdownOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
                   </button>
+
+                  {/* Dropdown Menu */}
+                  {userDropdownOpen && (
+                    <div className="absolute right-0 mt-2 w-48 bg-primary-dark border border-default rounded-lg shadow-lg py-1 z-50">
+                      <Link
+                        href="/dashboard"
+                        onClick={handleUserDropdownClose}
+                        className="flex items-center gap-2 px-4 py-2 text-sm text-primary hover:bg-accent-light hover:text-accent transition-colors duration-200"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                        </svg>
+                        Dashboard
+                      </Link>
+                      <button
+                        onClick={handleSignOut}
+                        className="w-full flex items-center gap-2 px-4 py-2 text-sm text-primary hover:bg-coral-light hover:text-coral transition-colors duration-200 text-left"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                        Sign Out
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <Link
@@ -171,31 +223,44 @@ export default function Navbar(): ReactElement {
           </Link>
           {!loading && (
             user ? (
-              <div className="space-y-2">
-                <div className="flex items-center space-x-3 px-3 py-2">
-                  {user.photoURL && (
-                    <img
-                      src={user.photoURL}
-                      alt={`${user.displayName || user.email}'s profile`}
-                      className="w-10 h-10 rounded-full border-2 border-default"
-                    />
-                  )}
-                  <div className="flex-1">
-                    <p className="text-sm text-primary font-medium">
-                      {user.displayName || user.email}
-                    </p>
-                    <p className="text-xs text-secondary">
-                      {user.email}
-                    </p>
+                              <div className="space-y-2">
+                  <div className="flex items-center space-x-3 px-3 py-2">
+                    {user.photoURL && (
+                      <img
+                        src={user.photoURL}
+                        alt={`${user.displayName || user.email}'s profile`}
+                        className="w-10 h-10 rounded-full border-2 border-default"
+                      />
+                    )}
+                    <div className="flex-1">
+                      <p className="text-sm text-primary font-medium">
+                        {user.displayName || user.email}
+                      </p>
+                      <p className="text-xs text-secondary">
+                        {user.email}
+                      </p>
+                    </div>
                   </div>
+                  <Link
+                    href="/dashboard"
+                    onClick={handleClose}
+                    className="flex items-center gap-2 text-primary hover:text-accent px-3 py-3 rounded-md text-base font-medium transition-colors duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="w-full flex items-center gap-2 text-left text-white hover:opacity-80 px-3 py-3 rounded-md text-base font-medium bg-accent transition-colors duration-200"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                    Sign Out
+                  </button>
                 </div>
-                <button
-                  onClick={handleSignOut}
-                  className="w-full text-left text-white hover:opacity-80 px-3 py-3 rounded-md text-base font-medium bg-accent transition-colors duration-200"
-                >
-                  Sign Out
-                </button>
-              </div>
             ) : (
               <Link
                 href="/auth"
